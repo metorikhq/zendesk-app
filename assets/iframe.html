@@ -8,7 +8,7 @@
 <body>
 	<div id="app" v-cloak>
 		<div v-if="loading">
-			Loading...
+			<div class="loading-pulse"></div>
 		</div>
 		<div v-else>
 			<div class="alert alert-danger" v-if="error">Something went wrong.</div>
