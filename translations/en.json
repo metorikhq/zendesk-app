@@ -2,27 +2,16 @@
 
 {
   "app": {
-    "description": "Quickly access bookmarked tickets. Syncs with the iPad app.",
+    "description": "Displays Metorik customer and order details",
 
-    "instructions": "Enter the number of bookmarks to show; leave blank to show all",
+    "instructions": "You can get the token from your store's Metorik integration settings - https://app.metorik.com/settings/stores/current?area=integrations.",
 
     "parameters": {
-      "max_count": {
-        "label": "Maximum number of bookmarks to show"
+      "token": {
+        "label": "Get token"
       }
     }
   },
 
-  "title": "Bookmarks",
-
-  "save": {
-    "button": "Bookmark ticket #{{id}}",
-    "success": "Bookmarked ticket #{{id}}",
-    "error": "Sorry, something went wrong."
-  },
-
-  "learn_more": {
-    "message": "To learn more, {{link}}",
-    "link_text": "see the Zendesk forums"
-  }
+  "title": "Metorik"
 }
