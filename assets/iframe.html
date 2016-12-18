@@ -1,0 +1,145 @@
+<html>
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Cairo:400,600,700,900|Source+Sans+Pro:400,400i,600,600i,700,700i,900,900i" rel="stylesheet">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="main.css" rel="stylesheet">
+</head>
+<body>
+	<div id="app" v-cloak>
+		<div v-if="loading">
+			Loading...
+		</div>
+		<div v-else>
+			<div class="alert alert-danger" v-if="error">Something went wrong.</div>
+			<div class="alert alert-danger" v-if="tokenError">Token missing! Please set it in the app settings.</div>
+			<div class="metorik-error" v-if="metorikError">
+				{{ metorikError }}
+			</div>
+			<div class="metorik-content" v-if="metorik.data">
+				<!-- Customer layout first -->
+				<div v-if="metorik.data.customer">
+					<div class="profile clearfix">
+						<div class="details">
+							<a :href="'https://app.metorik.com/customer/' + metorik.data.customer.customer_id" class="name" target="_blank">{{ metorik.data.customer.fullName }}</a>
+							<ul class="fa-ul">
+								<li class="meta registered"><i class="fa fa-clock-o fa-li"></i> <span>{{ dateFormat(metorik.data.customer.customerCreatedAtTimezone) }}</span></li>
+								<li class="meta location" v-if="metorik.data.customer.location"><i class="fa fa-map-marker fa-li"></i> <span>{{ metorik.data.customer.location }}</span></li>
+								<li class="meta phone" v-if="metorik.data.customer.billing_address_phone"><i class="fa fa-phone fa-li"></i> <a :href="'tel:' + metorik.data.customer.billing_address_phone">{{ metorik.data.customer.billing_address_phone }}</a></li>
+							</ul>
+						</div>
+						<div class="image">
+							<a :href="'https://app.metorik.com/customer/' + metorik.data.customer.customer_id" target="_blank">
+								<img :src="metorik.data.customer.avatar" />
+							</a>
+						</div>
+					</div>
+
+					<div class="stats">
+						<div class="stat"><span class="amount">{{ metorik.data.totals.orders_count }}</span> <span class="words">{{ pluralWord(metorik.data.totals.orders_count, 'order', 'orders') }}</span></div>
+						<div class="stat"><span class="amount">{{ metorik.data.totals.items_count }}</span> <span class="words">{{ pluralWord(metorik.data.totals.items_count, 'item', 'items') }}</span></div>
+						<div class="stat"><span class="amount">{{ moneyFormat(metorik.data.totals.average_order, 0) }}</span> <span class="words">avg order</span></div>
+						<div class="stat"><span class="amount">{{ moneyFormat(metorik.data.totals.total, 0) }}</span> <span class="words">ltv</span></div>
+					</div>
+
+					<hr />
+
+					<div v-if="metorik.data.orders.length">
+						<h4>{{ metorik.data.orders.length }} {{ pluralWord(metorik.data.orders.length, 'order', 'orders') }}:</h4>
+						<ul class="orders">
+							<li class="order" v-for="order in metorik.data.orders">
+								<a class="clearfix" :href="'https://app.metorik.com/order/' + order.order_id" target="_blank">
+									<div class="details">
+										<div class="total">
+											<span>{{ moneyFormat(order.total) }}</span> for <span>{{ order.total_items }} {{ pluralWord(order.total_items, 'item', 'items') }}</span>
+										</div>
+										<div class="meta">
+											<span class="number">{{ order.order_number }}</span> -
+											<span class="date">{{ dateFormat(order.orderCreatedAtTimezone) }}</span>
+										</div>
+									</div>
+									<div class="status">
+							        	<span class="fa-stack fa-lg" :style="'color: ' + statusAttribute(order.status).color">
+										  	<i class="fa fa-circle-o fa-stack-2x"></i>
+										  	<i :class="'fa fa-stack-1x ' + statusAttribute(order.status).icon"></i>
+										</span>
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+
+					<hr />
+
+					<div v-if="metorik.data.products">
+						<h4>Owns {{ Object.keys(metorik.data.products).length }} different products:</h4>
+						<ul class="products">
+							<li class="product" v-for="product in metorik.data.products">
+								<span>{{ product.name }}</span> x {{ product.count }}
+							</li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Guest layout -->
+				<div v-if="metorik.data.guest">
+					<div class="profile clearfix">
+						<div class="details">
+							<div class="name">{{ metorik.data.orders[0].billing_address_first_name }} {{ metorik.data.orders[0].billing_address_last_name }}</div>
+							<ul class="fa-ul">
+								<li class="meta registered"><i class="fa fa-clock-o fa-li"></i> <span>{{ dateFormat(metorik.data.orders[0].orderCreatedAtTimezone) }}</span></li>
+								<li class="meta location" v-if="metorik.data.location"><i class="fa fa-map-marker fa-li"></i> <span>{{ metorik.data.location }}</span></li>
+								<li class="meta phone" v-if="metorik.data.orders[0].billing_address_phone"><i class="fa fa-phone fa-li"></i> <a :href="'tel:' + metorik.data.orders[0].billing_address_phone">{{ metorik.data.orders[0].billing_address_phone }}</a></li>
+							</ul>
+						</div>
+						<div class="image">
+							<img :src="metorik.data.orders[0].customerAvatar" />
+						</div>
+					</div>
+
+					<hr />
+
+					<p class="guest-notice">This user is a guest with a single order:</p>
+
+					<div class="orders">
+						<div class="order guest-order">
+							<a class="clearfix" :href="'https://app.metorik.com/order/' + metorik.data.orders[0].order_id" target="_blank">
+								<div class="details">
+									<div class="total">
+										<span>{{ moneyFormat(metorik.data.orders[0].total) }}</span> for <span>{{ metorik.data.orders[0].total_items }} {{ pluralWord(metorik.data.orders[0].total_items, 'item', 'items') }}</span>
+									</div>
+									<div class="meta">
+										<span class="number">{{ metorik.data.orders[0].order_number }}</span> -
+										<span class="date">{{ dateFormat(metorik.data.orders[0].orderCreatedAtTimezone) }}</span>
+									</div>
+								</div>
+								<div class="status">
+						        	<span class="fa-stack fa-lg" :style="'color: ' + statusAttribute(metorik.data.orders[0].status).color">
+									  	<i class="fa fa-circle-o fa-stack-2x"></i>
+									  	<i :class="'fa fa-stack-1x ' + statusAttribute(metorik.data.orders[0].status).icon"></i>
+									</span>
+								</div>
+							</a>
+
+							<div class="order-items" v-if="metorik.data.orders[0].line_items.length">
+								<ul>
+									<li class="order-item" v-for="item in metorik.data.orders[0].line_items">
+										{{ item.name }} x {{ item.quantity }} - <span class="price">{{ moneyFormat(item.total) }}</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<script src="https://cdn.jsdelivr.net/vue.resource/1.0.3/vue-resource.min.js"></script>
+	<script type="text/javascript" src="libs/moment.js"></script>
+	<script type="text/javascript" src="libs/accounting.js"></script>
+	<script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
+	<script type="text/javascript" src="main.js"></script>
+</body>
+</html>

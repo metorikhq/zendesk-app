@@ -1,0 +1,28 @@
+// in translations/en.json:
+
+{
+  "app": {
+    "description": "Quickly access bookmarked tickets. Syncs with the iPad app.",
+
+    "instructions": "Enter the number of bookmarks to show; leave blank to show all",
+
+    "parameters": {
+      "max_count": {
+        "label": "Maximum number of bookmarks to show"
+      }
+    }
+  },
+
+  "title": "Bookmarks",
+
+  "save": {
+    "button": "Bookmark ticket #{{id}}",
+    "success": "Bookmarked ticket #{{id}}",
+    "error": "Sorry, something went wrong."
+  },
+
+  "learn_more": {
+    "message": "To learn more, {{link}}",
+    "link_text": "see the Zendesk forums"
+  }
+}
