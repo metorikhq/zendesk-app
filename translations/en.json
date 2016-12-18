@@ -8,7 +8,7 @@
 
     "parameters": {
       "token": {
-        "label": "Get token"
+        "label": "Token (get from your store's Metorik integration settings)"
       }
     }
   },
