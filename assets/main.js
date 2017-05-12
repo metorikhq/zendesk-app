@@ -5,7 +5,7 @@ var app = new Vue({
 	el: '#app',
 
 	data: {
-		apiUrl: 'http://metorik-app.dev', //https://app.metorik.com',
+		apiUrl: 'https://app.metorik.com',
 		user: {},
 		loading: true,
 		error: false,
