@@ -1,11 +1,21 @@
 #app {
-	color: #555;
 	color: #68768c;
 	font-family: "Source Sans Pro", sans-serif;
 }
 #app[v-cloak] {
 	display: none;
 }
+
+#app .metorik-error {
+	border: 1px solid #d3e0e9;
+	border-radius: 2px;
+	padding: 14px 0;
+	text-align: center;
+}
+#app .metorik-error .try-search {
+	padding-top: 8px;
+}
+
 #app .metorik-content {
 	padding: 8px 5px;
 }
@@ -91,9 +101,11 @@
 #app .metorik-content .orders .order a {
 	border: 1px solid #d3e0e9;
 	border-radius: 2px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
 	color: #68768c;
 	display: block;
-	margin-bottom: 4px;
+	margin-bottom: 0;
 	text-decoration: none;
 	width: 100%;
     -webkit-transition: all 200ms;
@@ -143,16 +155,12 @@
 	font-size: 13px;
 	text-transform: uppercase;
 }
-#app .metorik-content .orders .order.guest-order a {
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-	margin-bottom: 0;
-}
 #app .metorik-content .order-items {
 	border: 1px solid #d3e0e9;
 	border-top: 0;
 	border-bottom-left-radius: 2px;
 	border-bottom-right-radius: 2px;
+	margin-bottom: 10px;
 	width: 100%;
 }
 #app .metorik-content .order-items ul {
@@ -164,6 +172,13 @@
 	border-bottom: 1px solid #d3e0e9;
 	font-size: 13px;
 	padding: 8px 12px;
+}
+#app .metorik-content .order-items ul .order-item.show-all {
+	cursor: pointer;
+	font-style: italic;
+}
+#app .metorik-content .order-items ul .order-item.show-all:hover {
+	background: #f5f5f5;
 }
 #app .metorik-content .order-items ul .order-item:last-of-type {
 	border-bottom: 0;

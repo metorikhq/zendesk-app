@@ -4,7 +4,7 @@
   <link href="https://fonts.googleapis.com/css?family=Cairo:400,600,700,900|Source+Sans+Pro:400,400i,600,600i,700,700i,900,900i" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet">
-  <link href="main.css" rel="stylesheet">
+  <link href="main.css?v-1.1" rel="stylesheet">
 </head>
 <body>
 	<div id="app" v-cloak>
@@ -16,6 +16,10 @@
 			<div class="alert alert-danger" v-if="tokenError">Token missing! Please set it in the app settings.</div>
 			<div class="metorik-error" v-if="metorikError">
 				{{ metorikError }}
+
+				<div class="try-search" v-if="metorikError.includes('No matching')">
+					Try searching on the <a href="https://app.metorik.com/customers" target="_blank">customers page</a>?
+				</div>
 			</div>
 			<div class="metorik-content" v-if="metorik.data">
 				<!-- Customer layout first -->
@@ -52,7 +56,7 @@
 								<a class="clearfix" :href="'https://app.metorik.com/order/' + order.order_id" target="_blank">
 									<div class="details">
 										<div class="total">
-											<span>{{ moneyFormat(order.total) }}</span> for <span>{{ order.total_items }} {{ pluralWord(order.total_items, 'item', 'items') }}</span>
+											<span>{{ moneyFormat(order.total) }}</span> for <span>{{ numberFormat(order.total_items, totalItemsDecimals(order.total_items)) }} {{ pluralWord(order.total_items, 'item', 'items') }}</span>
 										</div>
 										<div class="meta">
 											<span class="number">{{ order.order_number }}</span> -
@@ -66,14 +70,63 @@
 										</span>
 									</div>
 								</a>
+
+								<div class="order-items" v-if="order.line_items.length">
+									<ul>
+										<li class="order-item" v-for="(item, key) in order.line_items" v-if="key < 3 || showAllItems">
+											{{ item.name }} x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
+										</li>
+										<li class="order-item show-all" v-if="! showAllItems && order.line_items.length > 3" v-on:click="showAllItems = true">
+											Show all order items...
+										</li>
+									</ul>
+								</div>
 							</li>
 						</ul>
 					</div>
 
 					<hr />
 
+					<div v-if="metorik.data.subscriptions && metorik.data.subscriptions.length">
+						<h4>{{ metorik.data.subscriptions.length }} {{ pluralWord(metorik.data.subscriptions.length, 'subscription', 'subscriptions') }}:</h4>
+						<ul class="orders subscriptions">
+							<li class="order subscription" v-for="subscription in metorik.data.subscriptions">
+								<a class="clearfix" :href="'https://app.metorik.com/subscription/' + subscription.subscription_id" target="_blank">
+									<div class="details">
+										<div class="total">
+											<span>{{ subscriptionPeriod(subscription) }}</span> for <span>{{ numberFormat(subscription.order.total_items, totalItemsDecimals(subscription.order.total_items)) }} {{ pluralWord(subscription.order.total_items, 'item', 'items') }}</span>
+										</div>
+										<div class="meta">
+											<span class="number">#{{ subscription.subscription_id }}</span> -
+											<span class="date">{{ dateFormat(subscription.subscriptionStartedTimezone) }}</span>
+										</div>
+									</div>
+									<div class="status">
+							        	<span class="fa-stack fa-lg tooltip-left" :style="'color: ' + statusAttribute(subscription.order.status).color" :data-tooltip="subscription.order.status">
+										  	<i class="fa fa-circle-o fa-stack-2x"></i>
+										  	<i :class="'fa fa-stack-1x ' + statusAttribute(subscription.order.status).icon"></i>
+										</span>
+									</div>
+								</a>
+
+								<div class="order-items" v-if="subscription.order.line_items.length">
+									<ul>
+										<li class="order-item" v-for="(item, key) in subscription.order.line_items" v-if="key < 3 || showAllItems">
+											{{ item.name }} x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
+										</li>
+										<li class="order-item show-all" v-if="! showAllItems && subscription.order.line_items.length > 3" v-on:click="showAllItems = true">
+											Show all order items...
+										</li>
+									</ul>
+								</div>
+							</li>
+						</ul>
+
+						<hr />
+					</div>
+
 					<div v-if="metorik.data.products">
-						<h4>Owns {{ Object.keys(metorik.data.products).length }} different products:</h4>
+						<h4>Owns {{ Object.keys(metorik.data.products).length }} {{ pluralWord(Object.keys(metorik.data.products).length, 'product', 'different products') }}:</h4>
 						<ul class="products">
 							<li class="product" v-for="product in metorik.data.products">
 								<span>{{ product.name }}</span> x {{ product.count }}
@@ -107,7 +160,7 @@
 							<a class="clearfix" :href="'https://app.metorik.com/order/' + metorik.data.orders[0].order_id" target="_blank">
 								<div class="details">
 									<div class="total">
-										<span>{{ moneyFormat(metorik.data.orders[0].total) }}</span> for <span>{{ metorik.data.orders[0].total_items }} {{ pluralWord(metorik.data.orders[0].total_items, 'item', 'items') }}</span>
+										<span>{{ moneyFormat(metorik.data.orders[0].total) }}</span> for <span>{{ numberFormat(metorik.data.orders[0].total_items, totalItemsDecimals(metorik.data.orders[0].total_item)) }} {{ pluralWord(metorik.data.orders[0].total_items, 'item', 'items') }}</span>
 									</div>
 									<div class="meta">
 										<span class="number">{{ metorik.data.orders[0].order_number }}</span> -

@@ -5,7 +5,7 @@ var app = new Vue({
 	el: '#app',
 
 	data: {
-		apiUrl: 'https://app.metorik.com',
+		apiUrl: 'http://metorik-app.dev', //https://app.metorik.com',
 		user: {},
 		loading: true,
 		error: false,
@@ -14,6 +14,7 @@ var app = new Vue({
 		metorik: {
 			data: false
 		},
+		showAllItems: false
 	},
 
 	mounted: function() {
@@ -59,7 +60,7 @@ var app = new Vue({
 			  	}
 
 				// get data from metorik
-				self.$http.get(self.apiUrl + '/api/store/external/zendesk?token=' + token + '&email=' + email).then(function(response) {
+				self.$http.get(self.apiUrl + '/api/store/external/zendesk?token=' + token + '&email=' + encodeURIComponent(email)).then(function(response) {
 					self.loading = false;
 					// handle response
 					if (response.data.success) {
@@ -76,6 +77,18 @@ var app = new Vue({
 		dateFormat: function(date, format = 'LL') {
 			return moment(date).format(format);
 		},
+
+		numberFormat: function(amount, precision = 2) {
+            return accounting.formatNumber(amount, precision);
+		},
+
+        /**
+         * Number of decimals for a total items count. Handles possiblity
+         * that there are decimals, and if so, will give 2 Otherwise 0.
+         */
+        totalItemsDecimals: function(items) {
+            return items % 1 != 0 ? 2 : 0;
+        },
 
 		moneyFormat: function(amount, precision = 2) {
 			// use current store's current
@@ -96,6 +109,23 @@ var app = new Vue({
 
 			return plural;
 		},
+
+		subscriptionPeriod(subscription) {
+			let period = subscription.billing_interval == 1 ? subscription.billing_period : this.ordinal(subscription.billing_interval) + ' ' + subscription.billing_period;
+			let amount = this.moneyFormat(subscription.order.total, 2) + ' / ' + period;
+			return amount;
+		},
+
+        /**
+         * Ordinal of a number.
+         * @param n
+         * @returns {string}
+         */
+        ordinal: function(n) {
+            var s=["th","st","nd","rd"],
+                v=n%100;
+            return n+(s[(v-20)%10]||s[v]||s[0]);
+        },
 
 		statusAttribute: function(status) {
         	let color;
