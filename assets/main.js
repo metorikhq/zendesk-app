@@ -136,6 +136,10 @@ var app = new Vue({
         			color = '#27AE60'; // green
         			icon = 'fa-check';
         			break;
+				case 'active':
+        			color = '#27AE60'; // green
+        			icon = 'fa-calendar-check-o';
+					break;
         		case 'processing':
         			color = '#FECF39'; // yellow
         			icon = 'fa-ellipsis-h';
@@ -146,7 +150,7 @@ var app = new Vue({
         			break;
         		case 'on-hold':
         			color = '#D35400'; // orange
-        			icon = 'fa-circle';
+        			icon = 'fa-pause-circle';
         			break;
     			case 'cancelled':
     				color = '#C0392B'; // darker red

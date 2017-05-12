@@ -64,9 +64,8 @@
 										</div>
 									</div>
 									<div class="status">
-							        	<span class="fa-stack fa-lg tooltip-left" :style="'color: ' + statusAttribute(order.status).color" :data-tooltip="order.status">
-										  	<i class="fa fa-circle-o fa-stack-2x"></i>
-										  	<i :class="'fa fa-stack-1x ' + statusAttribute(order.status).icon"></i>
+							        	<span class="tooltip-left" :style="'color: ' + statusAttribute(order.status).color" :data-tooltip="order.status">
+										  	<i :class="'fa ' + statusAttribute(order.status).icon"></i>
 										</span>
 									</div>
 								</a>
@@ -98,13 +97,12 @@
 										</div>
 										<div class="meta">
 											<span class="number">#{{ subscription.subscription_id }}</span> -
-											<span class="date">{{ dateFormat(subscription.subscriptionStartedTimezone) }}</span>
+											<span class="date">Started {{ dateFormat(subscription.subscriptionStartedTimezone) }}</span>
 										</div>
 									</div>
 									<div class="status">
-							        	<span class="fa-stack fa-lg tooltip-left" :style="'color: ' + statusAttribute(subscription.order.status).color" :data-tooltip="subscription.order.status">
-										  	<i class="fa fa-circle-o fa-stack-2x"></i>
-										  	<i :class="'fa fa-stack-1x ' + statusAttribute(subscription.order.status).icon"></i>
+							        	<span class="tooltip-left" :style="'color: ' + statusAttribute(subscription.order.status).color" :data-tooltip="subscription.order.status">
+										  	<i :class="'fa ' + statusAttribute(subscription.order.status).icon"></i>
 										</span>
 									</div>
 								</a>
@@ -115,7 +113,7 @@
 											{{ item.name }} x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
 										</li>
 										<li class="order-item show-all" v-if="! showAllItems && subscription.order.line_items.length > 3" v-on:click="showAllItems = true">
-											Show all order items...
+											Show all subscription items...
 										</li>
 									</ul>
 								</div>
@@ -153,37 +151,39 @@
 
 					<hr />
 
-					<p class="guest-notice">This user is a guest with a single order:</p>
+					<p class="guest-notice">This user is a <strong>guest</strong> with {{ metorik.data.orders.length }} {{ pluralWord(metorik.data.orders.length, 'order', 'orders') }}:</p>
 
-					<div class="orders">
-						<div class="order guest-order">
-							<a class="clearfix" :href="'https://app.metorik.com/order/' + metorik.data.orders[0].order_id" target="_blank">
+					<ul class="orders">
+						<li class="order" v-for="order in metorik.data.orders">
+							<a class="clearfix" :href="'https://app.metorik.com/order/' + order.order_id" target="_blank">
 								<div class="details">
 									<div class="total">
-										<span>{{ moneyFormat(metorik.data.orders[0].total) }}</span> for <span>{{ numberFormat(metorik.data.orders[0].total_items, totalItemsDecimals(metorik.data.orders[0].total_item)) }} {{ pluralWord(metorik.data.orders[0].total_items, 'item', 'items') }}</span>
+										<span>{{ moneyFormat(order.total) }}</span> for <span>{{ numberFormat(order.total_items, totalItemsDecimals(order.total_items)) }} {{ pluralWord(order.total_items, 'item', 'items') }}</span>
 									</div>
 									<div class="meta">
-										<span class="number">{{ metorik.data.orders[0].order_number }}</span> -
-										<span class="date">{{ dateFormat(metorik.data.orders[0].orderCreatedAtTimezone) }}</span>
+										<span class="number">{{ order.order_number }}</span> -
+										<span class="date">{{ dateFormat(order.orderCreatedAtTimezone) }}</span>
 									</div>
 								</div>
 								<div class="status">
-						        	<span class="fa-stack fa-lg" :style="'color: ' + statusAttribute(metorik.data.orders[0].status).color">
-									  	<i class="fa fa-circle-o fa-stack-2x"></i>
-									  	<i :class="'fa fa-stack-1x ' + statusAttribute(metorik.data.orders[0].status).icon"></i>
+						        	<span class="tooltip-left" :style="'color: ' + statusAttribute(order.status).color" :data-tooltip="order.status">
+									  	<i :class="'fa ' + statusAttribute(order.status).icon"></i>
 									</span>
 								</div>
 							</a>
 
-							<div class="order-items" v-if="metorik.data.orders[0].line_items.length">
+							<div class="order-items" v-if="order.line_items.length">
 								<ul>
-									<li class="order-item" v-for="item in metorik.data.orders[0].line_items">
-										{{ item.name }} x {{ item.quantity }} - <span class="price">{{ moneyFormat(item.total) }}</span>
+									<li class="order-item" v-for="(item, key) in order.line_items" v-if="key < 3 || showAllItems">
+										{{ item.name }} x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
+									</li>
+									<li class="order-item show-all" v-if="! showAllItems && order.line_items.length > 3" v-on:click="showAllItems = true">
+										Show all order items...
 									</li>
 								</ul>
 							</div>
-						</div>
-					</div>
+						</li>
+					</ul>
 				</div>
 			</div>
 		</div>
