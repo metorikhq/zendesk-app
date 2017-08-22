@@ -73,7 +73,7 @@
 								<div class="order-items" v-if="order.line_items.length">
 									<ul>
 										<li class="order-item" v-for="(item, key) in order.line_items" v-if="key < 3 || showAllItems">
-											{{ item.name }} x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
+											{{ item.name }} <span class="sku" v-if="item.sku">({{ item.sku }}) </span>x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
 										</li>
 										<li class="order-item show-all" v-if="! showAllItems && order.line_items.length > 3" v-on:click="showAllItems = true">
 											Show all order items...
@@ -110,7 +110,7 @@
 								<div class="order-items" v-if="subscription.order.line_items.length">
 									<ul>
 										<li class="order-item" v-for="(item, key) in subscription.order.line_items" v-if="key < 3 || showAllItems">
-											{{ item.name }} x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
+											{{ item.name }} <span class="sku" v-if="item.sku">({{ item.sku }}) </span>x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
 										</li>
 										<li class="order-item show-all" v-if="! showAllItems && subscription.order.line_items.length > 3" v-on:click="showAllItems = true">
 											Show all subscription items...
@@ -127,63 +127,11 @@
 						<h4>Owns {{ Object.keys(metorik.data.products).length }} {{ pluralWord(Object.keys(metorik.data.products).length, 'product', 'different products') }}:</h4>
 						<ul class="products">
 							<li class="product" v-for="product in metorik.data.products">
-								<span>{{ product.name }}</span> x {{ product.count }}
+								<span>{{ product.name }}</span> 
+								<span class="sku" v-if="product.sku">({{ product.sku }}) </span>x {{ product.count }}
 							</li>
 						</ul>
 					</div>
-				</div>
-
-				<!-- Guest layout -->
-				<div v-if="metorik.data.guest">
-					<div class="profile clearfix">
-						<div class="details">
-							<div class="name">{{ metorik.data.orders[0].billing_address_first_name }} {{ metorik.data.orders[0].billing_address_last_name }}</div>
-							<ul class="fa-ul">
-								<li class="meta registered"><i class="fa fa-clock-o fa-li"></i> <span>{{ dateFormat(metorik.data.orders[0].orderCreatedAtTimezone) }}</span></li>
-								<li class="meta location" v-if="metorik.data.location"><i class="fa fa-map-marker fa-li"></i> <span>{{ metorik.data.location }}</span></li>
-								<li class="meta phone" v-if="metorik.data.orders[0].billing_address_phone"><i class="fa fa-phone fa-li"></i> <a :href="'tel:' + metorik.data.orders[0].billing_address_phone">{{ metorik.data.orders[0].billing_address_phone }}</a></li>
-							</ul>
-						</div>
-						<div class="image">
-							<img :src="metorik.data.orders[0].customerAvatar" />
-						</div>
-					</div>
-
-					<hr />
-
-					<p class="guest-notice">This user is a <strong>guest</strong> with {{ metorik.data.orders.length }} {{ pluralWord(metorik.data.orders.length, 'order', 'orders') }}:</p>
-
-					<ul class="orders">
-						<li class="order" v-for="order in metorik.data.orders">
-							<a class="clearfix" :href="'https://app.metorik.com/order/' + order.order_id" target="_blank">
-								<div class="details">
-									<div class="total">
-										<span>{{ moneyFormat(order.total) }}</span> for <span>{{ numberFormat(order.total_items, totalItemsDecimals(order.total_items)) }} {{ pluralWord(order.total_items, 'item', 'items') }}</span>
-									</div>
-									<div class="meta">
-										<span class="number">{{ order.order_number }}</span> -
-										<span class="date">{{ dateFormat(order.orderCreatedAtTimezone) }}</span>
-									</div>
-								</div>
-								<div class="status">
-						        	<span class="tooltip-left" :style="'color: ' + statusAttribute(order.status).color" :data-tooltip="order.status">
-									  	<i :class="'fa ' + statusAttribute(order.status).icon"></i>
-									</span>
-								</div>
-							</a>
-
-							<div class="order-items" v-if="order.line_items.length">
-								<ul>
-									<li class="order-item" v-for="(item, key) in order.line_items" v-if="key < 3 || showAllItems">
-										{{ item.name }} x {{ numberFormat(item.quantity, totalItemsDecimals(item.quantity)) }} - <span class="price">{{ moneyFormat(item.total) }}</span>
-									</li>
-									<li class="order-item show-all" v-if="! showAllItems && order.line_items.length > 3" v-on:click="showAllItems = true">
-										Show all order items...
-									</li>
-								</ul>
-							</div>
-						</li>
-					</ul>
 				</div>
 			</div>
 		</div>
