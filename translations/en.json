@@ -2,6 +2,8 @@
 
 {
   "app": {
+    "name": "Metorik",
+    
     "description": "Displays Metorik customer and order details",
 
     "instructions": "You can get the token from your store's Metorik integration settings - https://app.metorik.com/settings/stores/current?area=integrations.",
