@@ -4,9 +4,11 @@
   "app": {
     "name": "Metorik",
     
-    "description": "Displays Metorik customer and order details",
+    "short_description": "Displays Metorik customer and order details in Zendesk",
 
-    "instructions": "You can get the token from your store's Metorik integration settings - https://app.metorik.com/settings/stores/current?area=integrations.",
+    "long_description": "[Sign up for Metorik here](https://metorik.com?ref=zendesk)\r\n\r\nMetorik is an all-in-one analytics solution for WooCommerce stores, unifying your store's orders, customers, and products through brilliant reports and a blazing fast interface. \r\n\r\nMetorik offers countless features that help you run your store and make more informed decisions like: \r\n\r\n* Segmenting/filtering \r\n* Digests \r\n* Order reports \u0026 management \r\n* Customer profiles \r\n* Product insights \u0026 reports \r\n* Unlimited team members \r\n* Integrations with other products like Google Analytics, Slack \u0026 Zendesk \r\n* So much more... (really!) \r\n\r\nMetorik offers a 2-way integration with Zendesk that's included for free with your Metorik account. The Metorik app for Zendesk pulls in customer and guest data from Metorik into Zendesk so you can get a better understanding of the customer you're talking to, including: \r\n\r\n* Customer Profile \r\n* Customer LTV \r\n* Customer Average Order \r\n* Customer Orders/Items Count \r\n* Order History \r\n* Products Owned \r\n\r\nIt takes moments to set up and doesn't affect your live store at all. Even if your live store was temporarily offline, the app will still work and you'll continue having access to your store's data! \r\n\r\nYou can also connect your Zendesk account in Metorik itself, which brings in related Zendesk tickets for a customer or order and lets you create new Zendesk tickets with a customer straight from Metorik.",
+
+    "installation_instructions": "Firstly, make sure that you have a store set up on [Metorik](https://metorik.com?ref=zendesk). \r\n\r\n**For Metorik's Zendesk App:** When you install the app, you'll be asked for a token. You can get this from your store's [Metorik integration settings](https://app.metorik.com/settings/stores/current?area=integrations). Copy the token over into the app's Zendesk settings. \r\n\r\n**For connecting Zendesk in Metorik:** Go to your store's [Metorik integration settings](https://app.metorik.com/settings/stores/current?area=integrations) and follow the steps to connect it using your Zendesk API key.",
 
     "parameters": {
       "token": {
