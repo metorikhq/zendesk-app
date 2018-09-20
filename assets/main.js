@@ -14,7 +14,8 @@ var app = new Vue({
 		metorik: {
 			data: false
 		},
-		showAllItems: false
+		showAllItems: false,
+		showProducts: false
 	},
 
 	mounted: function() {
@@ -24,29 +25,27 @@ var app = new Vue({
 	methods: {
 		getUserData: function() {
 			let self = this;
-			client.get('ticket.requester.id').then(function(data) {
-				var user_id = data['ticket.requester.id'];
-				var settings = {
-					url: '/api/v2/users/' + user_id + '.json',
-					type:'GET',
-					dataType: 'json',
-				};
-
-				client.request(settings).then(
-					function(data) {
-						self.user = data.user;
-						self.getMetorikData();
-					},
-					function(response) {
-						self.error = true;
-					}
-				);
+			// we try get ticket requester - if fails, we get user
+			client.get('ticket.requester').then(function(data) {
+				self.user = data['ticket.requester'];
+				self.getMetorikData();
+			}, function(error) {
+				client.get('user').then(function(data) {
+					self.user = data.user;
+					self.getMetorikData();
+				}, function(error) {
+					self.error = true;
+				});
 			});
 		},
 
 		getMetorikData: function() {
 			let self = this;
-			let email = this.user.email;
+			let email = [this.user.email];
+
+			const identities = this.user.identities;
+			const identity_emails = identities.map(i => i.value);
+			const emails = [...new Set([...email, ...identity_emails])];
 
 			// token from settings
 			client.metadata().then(function(metadata) {
@@ -60,7 +59,12 @@ var app = new Vue({
 			  	}
 
 				// get data from metorik
-				self.$http.get(self.apiUrl + '/api/store/external/zendesk?token=' + token + '&email=' + encodeURIComponent(email)).then(function(response) {
+				self.$http.get(self.apiUrl + '/api/store/external/zendesk', {
+					params: {
+						token: token,
+						email: emails
+					}
+				}).then(function(response) {
 					self.loading = false;
 					// handle response
 					if (response.data.success) {
@@ -80,6 +84,11 @@ var app = new Vue({
 
 		numberFormat: function(amount, precision = 2) {
             return accounting.formatNumber(amount, precision);
+		},
+
+		appLink: function(url) {
+			const id = this.metorik.data.store.id;
+			return 'https://app.metorik.com/stores/' + id + '/switch?redirect=' + url;
 		},
 
         /**
