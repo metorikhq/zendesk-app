@@ -1,14 +1,19 @@
 #app {
 	color: #68768c;
-	font-family: "Source Sans Pro", sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 #app[v-cloak] {
 	display: none;
 }
 
+#app a {
+	color: #4c6ef5;
+}
+
 #app .metorik-error {
 	border: 1px solid #d3e0e9;
 	border-radius: 2px;
+	margin-top: 10px;
 	padding: 14px 0;
 	text-align: center;
 }
@@ -17,10 +22,10 @@
 }
 
 #app .metorik-content {
-	padding: 8px 5px;
+	padding: 5px 12px 5px 2px;
 }
 #app .metorik-content h4 {
-	font-size: 16px;
+	font-size: 15px;
 	font-weight: 400;
 	margin-bottom: 14px;
 }
@@ -36,7 +41,7 @@
 	display: block;
 	font-family: "Cairo", sans-serif;
 	font-size: 18px;
-	font-weight: 600;
+	font-weight: 500;
 	margin-bottom: 8px;
 }
 #app .metorik-content .profile .details ul.fa-ul {
@@ -56,6 +61,8 @@
 #app .metorik-content .profile .image img {
 	border: 2px solid #d3e0e9;
 	border-radius: 100%;
+	margin-top: 5px;
+	max-width: 80px;
     -webkit-transition: all 200ms;
     transition: all 200ms;
 }
@@ -65,6 +72,7 @@
 
 #app .metorik-content .stats {
 	color: #7f8fa4;
+	margin-bottom: 5px;
 }
 #app .metorik-content .stats .stat {
 	border: 1px solid #d3e0e9;
@@ -74,8 +82,7 @@
 	font-size: 12px;
 	margin-bottom: 5px;
 	padding: 10px 12px;
-	text-transform: uppercase;
-	width: 41%;
+	width: 40%;
 }
 #app .metorik-content .stats .stat:nth-child(even) {
 	float: right;
@@ -83,7 +90,7 @@
 #app .metorik-content .stats .stat .amount {
 	color: #68768c;
 	display: inline-block;
-	font-size: 18px;
+	font-size: 16px;
 	font-weight: 500;
 	padding-right: 3px;
     vertical-align: middle;
@@ -92,6 +99,23 @@
     display: inline-block;
     padding-top: 1px;
 	vertical-align: middle;
+}
+#app .metorik-content .products-header {
+	border-radius: 2px;
+	border: 1px solid #d3e0e9;
+	cursor: pointer;
+	font-size: 14px;
+	margin-top: 0;
+	padding: 12px 10px;
+    -webkit-transition: all 200ms;
+    transition: all 200ms;
+}
+#app .metorik-content .products-header:hover {
+	background: #fafafa;
+}
+#app .metorik-content .products-header .action {
+	font-weight: bold;
+	padding-left: 4px;
 }
 
 #app .metorik-content .orders {
@@ -120,8 +144,8 @@
 }
 #app .metorik-content .orders .order .details .total {
 	color: #7f8fa4;
-	font-size: 15px;
-	margin-bottom: 2px;
+	font-size: 14px;
+	margin-bottom: 5px;
 }
 #app .metorik-content .orders .order .details .total span {
 	font-weight: 600;
@@ -137,14 +161,19 @@
 }
 
 #app .metorik-content .products {
+	border: 1px solid #d3e0e9;
+	border-radius: 2px;
 	list-style-type: none;
 	margin-left: 0;
 }
 #app .metorik-content .products .product {
-	border: 1px solid #d3e0e9;
+	border-bottom: 1px solid #d3e0e9;
 	color: #7f8fa4;
-	margin-bottom: 4px;
+	font-size: 13px;
 	padding: 12px;
+}
+#app .metorik-content .products .product:last-of-type {
+	border-bottom: 0;
 }
 #app .metorik-content .products .product span {
 	font-weight: 600;
@@ -168,12 +197,13 @@
 	margin: 0;
 }
 #app .metorik-content .order-items ul .order-item {
-	background: #fafafa;
+	background: #fcfcfc;
 	border-bottom: 1px solid #d3e0e9;
-	font-size: 13px;
+	font-size: 12px;
 	padding: 8px 12px;
 }
 #app .metorik-content .order-items ul .order-item.show-all {
+	color: #4c6ef5;
 	cursor: pointer;
 	font-style: italic;
 }
